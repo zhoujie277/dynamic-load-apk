@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         minSdkVersion 8
@@ -34,6 +34,7 @@ android {
 
 dependencies {
     provided files('../../../lib/build/libs/lib.jar')
+//    provided files('external-jars/dl-lib.jar')
     provided files('external-jars/android-support-v4.jar')
 }
 
@@ -41,4 +42,12 @@ task beforeBuild(dependsOn: ':lib:buildLib') << {
 
 }
 
-preBuild.dependsOn beforeBuild
+//preBuild.dependsOn beforeBuild
+def dlPath = '/sdcard/DynamicLoadHost'
+task uploadApk(type: Exec) { arg ->
+    workingDir arg.project.projectDir.toString() + '/build/outputs/apk/'
+    println 'look the uploadApk' + workingDir
+//        commandLine "$adb", 'shell', 'ls', '/sdcard/mysoft'
+    commandLine "adb", 'push', arg.project.name + '-debug.apk', dlPath
+
+}
